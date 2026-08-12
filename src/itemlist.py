@@ -160,14 +160,20 @@ class ItemList:
         """Return raw duration data for JS-side schedule calculator (first playlist only)."""
         if not self.playlist_ids:
             return None
-        pl = self.playlist_ids[0]
-        try:
-            videos = pl.videos_range
-        except AttributeError:
-            videos = getattr(pl, "videos", [])
-        return {
-            "video_count": len(videos),
-            "total_seconds": int(pl.total_duration.total_seconds()),
-            "video_durations": [int(v.duration.total_seconds()) for v in videos],
-            "playlist_name": pl.playlist_name,
-        }
+        results = []
+        for pl in self.playlist_ids:
+            if pl.video_count <= 0:
+                continue
+            try:
+                videos = pl.videos_range
+            except AttributeError:
+                videos = getattr(pl, "videos", [])
+            results.append(
+                {
+                    "video_count": len(videos),
+                    "total_seconds": int(pl.total_duration.total_seconds()),
+                    "video_durations": [int(v.duration.total_seconds()) for v in videos],
+                    "playlist_name": pl.playlist_name,
+                }
+            )
+        return results if results else None

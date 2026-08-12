@@ -175,6 +175,8 @@ async def home_post(
         playlist_detail = [[("error_generic", "", {})]]
 
     ctx = base_context(request, canonical_path="/")
+    # print(f"Output TS({find_time_slice()}): {playlist_detail}")
+    print(f"Output TS({find_time_slice()}): {playlist_data}")
     ctx.update({
         "playlist_detail": playlist_detail,
         "search_string": search_string,
